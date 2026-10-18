@@ -321,3 +321,68 @@ footer { text-align: center; color: var(--muted); font-size: 13px; padding: 20px
   .section-heading { align-items: flex-start; flex-direction: column; }
   .dashboard-task { align-items: flex-start; }
 }
+
+/* Aksesibilitas: menghormati preferensi reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+.dashboard-illustration {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 24px 0;
+  padding: 20px;
+  border-radius: 16px;
+  background: #eef2ff;
+}
+
+.dashboard-illustration img {
+  width: 180px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.illustration-caption h3 {
+  margin: 0 0 8px;
+  color: #273469;
+}
+
+.illustration-caption p {
+  margin: 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .dashboard-illustration {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-illustration img {
+    width: 100%;
+    height: 180px;
+  }
+}
+
+.nav-link i,
+.nav-link svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
