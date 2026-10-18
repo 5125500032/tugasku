@@ -7,6 +7,7 @@
   <title>TugasKu — Pengelola Tugas Kuliah</title>
   <link rel="stylesheet" href="style.css">
   <script src="main.js" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -17,9 +18,20 @@
       </a>
 
       <nav class="main-nav" aria-label="Navigasi utama">
-        <button type="button" class="nav-link active" data-view="dashboard" aria-current="page">Dashboard</button>
-        <button type="button" class="nav-link" data-view="tasks">Kelola Tugas</button>
-        <button type="button" class="nav-link" data-view="about">Tentang</button>
+        <button type="button" class="nav-link active" data-view="dashboard" aria-current="page">
+          <i data-lucide="layout-dashboard" aria-hidden="true"></i>
+          <span>Dashboard</span>
+        </button>
+
+        <button type="button" class="nav-link" data-view="tasks">
+          <i data-lucide="clipboard-list" aria-hidden="true"></i>
+          <span>Kelola Tugas</span>
+        </button>
+
+        <button type="button" class="nav-link" data-view="about">
+          <i data-lucide="info" aria-hidden="true"></i>
+          <span>Tentang</span>
+        </button>
       </nav>
     </header>
 
@@ -31,6 +43,17 @@
           <h1 id="dashboardTitle">Dashboard</h1>
           <p class="subtitle">Pantau tugas kuliahmu dan lihat progres penyelesaiannya.</p>
         </div>
+
+        <div class="dashboard-illustration">
+  <img
+    src="image.jpg"
+    alt="Ilustrasi meja belajar untuk mengelola tugas"
+  />
+  <div class="illustration-caption">
+    <h3>Atur tugasmu, capai tujuanmu!</h3>
+    <p>Mulai dari satu tugas kecil hari ini.</p>
+  </div>
+</div>
 
         <div class="stats-grid">
           <article class="stat-card">
