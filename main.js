@@ -30,29 +30,85 @@ function saveTasks() {
   localStorage.setItem("taskmate_tasks", JSON.stringify(tasks));
 }
 
+// Mengecek apakah pengguna memilih mengurangi gerakan animasi.
+function motionAllowed() {
+  return !window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+}
+
+// Fungsi umum untuk menjalankan animasi.
+function animateElement(
+  element,
+  keyframes,
+  duration = 240,
+  easing = "ease-out"
+) {
+  if (
+    !element ||
+    !motionAllowed() ||
+    typeof element.animate !== "function"
+  ) {
+    return;
+  }
+
+  element.animate(keyframes, {
+    duration: Math.min(400, Math.max(150, duration)),
+    easing: easing,
+    fill: "both"
+  });
+}
+
 /* NAVIGASI: tiga tampilan di dalam satu aplikasi */
 const navButtons = document.querySelectorAll("[data-view]");
 const views = document.querySelectorAll(".view");
 
 function showView(viewId) {
   const validIds = ["dashboard", "tasks", "about"];
+
   if (!validIds.includes(viewId)) return;
 
+  // Menampilkan tampilan yang dipilih.
   views.forEach(view => {
     view.hidden = view.id !== viewId;
   });
 
-  document.querySelectorAll(".main-nav [data-view]").forEach(button => {
-    const active = button.dataset.view === viewId;
-    button.classList.toggle("active", active);
-    if (active) {
-      button.setAttribute("aria-current", "page");
-    } else {
-      button.removeAttribute("aria-current");
-    }
-  });
+  // Memperbarui status tombol navigasi.
+  document.querySelectorAll(".main-nav [data-view]")
+    .forEach(button => {
+      const active = button.dataset.view === viewId;
 
-  if (viewId === "dashboard") renderDashboard();
+      button.classList.toggle("active", active);
+
+      if (active) {
+        button.setAttribute("aria-current", "page");
+      } else {
+        button.removeAttribute("aria-current");
+      }
+    });
+
+  // ANIMASI 1: tampilan baru muncul dengan fade-in
+  // dan sedikit gerakan ke atas.
+  const activeView = document.getElementById(viewId);
+
+  animateElement(
+    activeView,
+    [
+      {
+        opacity: 0,
+        transform: "translateY(8px)"
+      },
+      {
+        opacity: 1,
+        transform: "translateY(0)"
+      }
+    ],
+    240
+  );
+
+  if (viewId === "dashboard") {
+    renderDashboard();
+  }
 }
 
 navButtons.forEach(button => {
@@ -166,7 +222,7 @@ function renderDashboard() {
 }
 
 /* Daftar tugas, pencarian, dan filter */
-function renderTasks() {
+function renderTasks(animateTaskId = null) {
   const search = searchInput.value.trim().toLowerCase();
   const filter = filterPriority.value;
 
@@ -213,11 +269,31 @@ function renderTasks() {
       </div>
     `;
     taskList.appendChild(article);
+    // ANIMASI 2: animasikan hanya kartu tugas yang baru ditambahkan.
+if (
+  animateTaskId !== null &&
+  task.id === animateTaskId
+) {
+  animateElement(
+    article,
+    [
+      {
+        opacity: 0,
+        transform: "translateY(10px)"
+      },
+      {
+        opacity: 1,
+        transform: "translateY(0)"
+      }
+    ],
+    260
+  );
+}
   });
 }
 
-function renderAll() {
-  renderTasks();
+function renderAll(animateTaskId = null) {
+  renderTasks(animateTaskId);
   renderDashboard();
 }
 
@@ -255,7 +331,7 @@ taskForm.addEventListener("submit", event => {
     submitBtn.disabled = false;
     formMessage.textContent = "Tugas berhasil ditambahkan.";
     formMessage.style.color = "#78e6a0";
-    renderAll();
+    renderAll(newTask.id);
   }, 300);
 });
 
@@ -300,3 +376,7 @@ taskList.addEventListener("click", event => {
 
 renderAll();
 showView("dashboard");
+
+if (window.lucide) {
+  window.lucide.createIcons();
+}
