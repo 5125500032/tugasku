@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TugasKu membantu mahasiswa mengelola tugas kuliah dan deadline.">
+  <title>TugasKu — Pengelola Tugas Kuliah</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="brand" href="#dashboard" data-view-link="dashboard" aria-label="TugasKu, buka Dashboard">
+        <span class="brand-mark" aria-hidden="true">TK</span>
+        <span><strong>TugasKu</strong><small>Pengelola tugas kuliah</small></span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navigasi utama">
+        <button type="button" class="nav-link active" data-view="dashboard" aria-current="page">Dashboard</button>
+        <button type="button" class="nav-link" data-view="tasks">Kelola Tugas</button>
+        <button type="button" class="nav-link" data-view="about">Tentang</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- TAMPILAN 1: DASHBOARD -->
+      <section id="dashboard" class="view" aria-labelledby="dashboardTitle">
+        <div class="page-heading">
+          <p class="eyebrow">RINGKASAN AKTIVITAS</p>
+          <h1 id="dashboardTitle">Dashboard</h1>
+          <p class="subtitle">Pantau tugas kuliahmu dan lihat progres penyelesaiannya.</p>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span class="stat-label">Total tugas</span>
+            <strong id="totalCount">0</strong>
+            <span class="stat-note">Semua tugas yang tercatat</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Tugas selesai</span>
+            <strong id="doneCount">0</strong>
+            <span class="stat-note">Tugas yang sudah diselesaikan</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Belum selesai</span>
+            <strong id="pendingCount">0</strong>
+            <span class="stat-note">Tugas yang masih perlu dikerjakan</span>
+          </article>
+        </div>
+
+        <section class="card progress-card" aria-labelledby="progressTitle">
+          <div class="section-heading">
+            <div>
+              <h2 id="progressTitle">Progres tugas</h2>
+              <p class="muted">Persentase tugas yang sudah selesai.</p>
+            </div>
+            <strong id="progressPercent" class="progress-percent">0%</strong>
+          </div>
+          <div class="progress-track" role="progressbar" aria-label="Progres penyelesaian tugas"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+          <button type="button" class="button-primary" data-view="tasks">Buka Kelola Tugas</button>
+        </section>
+
+        <section class="card" aria-labelledby="upcomingTitle">
+          <div class="section-heading">
+            <div>
+              <h2 id="upcomingTitle">Daftar tugas terbaru</h2>
+              <p class="muted">Ringkasan tugas yang kamu simpan.</p>
+            </div>
+            <button type="button" class="button-secondary" data-view="tasks">Lihat semua</button>
+          </div>
+          <div id="dashboardTaskList" class="dashboard-task-list">
+            <p class="empty-inline">Belum ada tugas. Tambahkan tugas pertamamu.</p>
+          </div>
+        </section>
+      </section>
+
+      <!-- TAMPILAN 2: KELOLA TUGAS -->
+      <section id="tasks" class="view" aria-labelledby="tasksTitle" hidden>
+        <div class="page-heading">
+          <p class="eyebrow">CATAT DAN ATUR</p>
+          <h1 id="tasksTitle">Kelola Tugas</h1>
+          <p class="subtitle">Catat tugas, tentukan deadline, lalu pantau statusnya.</p>
+        </div>
+
+        <section class="card" aria-labelledby="addTaskTitle">
+          <h2 id="addTaskTitle">Tambah Tugas</h2>
+          <form id="taskForm" novalidate>
+            <div class="form-grid">
+              <label>
+                Nama tugas
+                <input id="taskName" type="text" placeholder="Contoh: Membuat 8 Aset Animasi">
+                <small class="error" id="taskNameError"></small>
+              </label>
+              <label>
+                Mata kuliah
+                <input id="course" type="text" placeholder="Contoh: Animasi 2D">
+                <small class="error" id="courseError"></small>
+              </label>
+              <label>
+                Deadline
+                <input id="deadline" type="date">
+                <small class="error" id="deadlineError"></small>
+              </label>
+              <label>
+                Prioritas
+                <select id="priority">
+                  <option value="">Pilih prioritas</option>
+                  <option value="Tinggi">Tinggi</option>
+                  <option value="Sedang">Sedang</option>
+                  <option value="Rendah">Rendah</option>
+                </select>
+                <small class="error" id="priorityError"></small>
+              </label>
+            </div>
+            <div class="form-actions">
+              <button type="submit" id="submitBtn" class="button-primary">Tambah Tugas</button>
+              <button type="button" class="button-secondary" id="clearBtn">Kosongkan Form</button>
+              <span id="formMessage" class="form-message" aria-live="polite"></span>
+            </div>
+          </form>
+        </section>
+
+        <section class="card" aria-labelledby="taskListTitle">
+          <div class="toolbar">
+            <div>
+              <h2 id="taskListTitle">Daftar Tugas</h2>
+              <p class="muted">Gunakan pencarian atau filter untuk menemukan tugas.</p>
+            </div>
+            <div class="filters">
+              <input id="searchInput" type="search" placeholder="Cari tugas..." aria-label="Cari tugas">
+              <select id="filterPriority" aria-label="Filter prioritas">
+                <option value="Semua">Semua prioritas</option>
+                <option value="Tinggi">Tinggi</option>
+                <option value="Sedang">Sedang</option>
+                <option value="Rendah">Rendah</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="loadingState" class="state hidden" role="status">
+            <div class="spinner" aria-hidden="true"></div>
+            <p>Memuat daftar tugas...</p>
+          </div>
+          <div id="emptyState" class="state">
+            <div class="empty-icon" aria-hidden="true">✓</div>
+            <h3>Belum ada tugas</h3>
+            <p>Tambahkan tugas pertama kamu melalui formulir di atas.</p>
+          </div>
+          <div id="taskList" class="task-list" aria-live="polite"></div>
+        </section>
+      </section>
+
+      <!-- TAMPILAN 3: TENTANG -->
+      <section id="about" class="view" aria-labelledby="aboutTitle" hidden>
+        <div class="page-heading">
+          <p class="eyebrow">TENTANG APLIKASI</p>
+          <h1 id="aboutTitle">Tentang TugasKu</h1>
+          <p class="subtitle">Kenali tujuan dan fitur utama aplikasi ini.</p>
+        </div>
+
+        <section class="card about-card">
+          <div class="about-mark" aria-hidden="true">TK</div>
+          <h2>TugasKu — Kelola tugas dengan lebih mudah</h2>
+          <p>
+            TugasKu adalah prototipe aplikasi sederhana untuk membantu mahasiswa mencatat tugas kuliah,
+            menentukan deadline dan prioritas, serta memantau tugas yang sudah atau belum selesai.
+          </p>
+          <h3>Fitur utama</h3>
+          <ul class="feature-list">
+            <li>Mencatat nama tugas, mata kuliah, deadline, dan prioritas.</li>
+            <li>Mencari tugas dan menyaring daftar berdasarkan prioritas.</li>
+            <li>Menandai tugas selesai atau menghapus tugas.</li>
+            <li>Melihat ringkasan jumlah tugas dan progres penyelesaian.</li>
+            <li>Menyimpan data di browser menggunakan localStorage.</li>
+          </ul>
+          <div class="about-note">
+            <strong>Informasi pembuat</strong>
+            <p>Nama: <span class="placeholder">M. Ainul Fuad Farisi</span></p>
+            <p>Mata kuliah: Praktikum Pemrograman Visual</p>
+            <p>Proyek: Tugas 4 — Prototipe Terpadu</p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer>
+      <p>TugasKu • Praktikum Pemrograman Visual • Tugas 4</p>
+    </footer>
+  </div>
+</body>
+</html>
